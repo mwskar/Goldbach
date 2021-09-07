@@ -26,7 +26,10 @@ sub isPrime
 
 }
 
-for ($i = 1; $i < 100; $i++)
+print "Please input an upper pound for primes: ";
+my $input = <>;
+
+for ($i = 1; $i < $input; $i++)
 {
 	if (isPrime($i))
 	{
