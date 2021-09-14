@@ -1,9 +1,11 @@
 program prime
 
 integer i
+i = 1
 
-do i = 0, 100,1
+do while (i < 100)
         call printPrime(i)
+        i = i + 2
 end do
 
 end program
@@ -22,12 +24,22 @@ end subroutine printPrime
 logical function isPrime(i)
 
 implicit none
+logical :: retPrime
+integer :: i, x 
 
-integer i
+retPrime = .true.
 
-if (mod(i,2) /= 0) then
+x = 3
+do while (x * x <= i)
+        if(mod(i,x) == 0) then
+                retPrime = .false.
+        end if
+        x = x + 2
+end do
+
+if (retPrime) then
         isPrime = .true.
-else 
+else
         isPrime = .false.
 end if
 
