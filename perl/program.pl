@@ -6,8 +6,8 @@
 
 
 
-#use warnings;
-#use strict;
+use warnings;
+use strict;
 
 use Math::Complex;
 
@@ -54,9 +54,14 @@ sub calcNorm
     return sqrt(($_[0]**2) + ($_[1]**2) + ($_[2]**2));
 }
 
+my $input;
 
-print "Please input an odd integer greater than 7: ";
-my $input = <>;
+do
+{
+    print "Please input an odd integer greater than 7: ";
+    $input = <>;
+} while ($input % 2 == 0);
+
 my @Arr = ();
 my $count = 0;
 my $p = 0;
@@ -71,29 +76,13 @@ for ($p = 1; $p<= $input; $p += 2)
 	}
 }
 
-my $len;
-if (@Arr % 3 == 0)
-{
-    $len = @Arr/3;
-}
-elsif (@Arr % 3 < 5)
-{
-    $len = int(@Arr / 3) + 1;
-}
-else
-{
-    $len = int(@Arr/3);
-}
 
-my $flag = 0;
 my $norm = 0;
 my $newNorm;
 my @normArr = (0,0,0);
-my $counter = 0;
 
 my $l;
 my $x;
-my $y;
 my $j = 0;
 my $k = 0;
 my $i = 0;
@@ -103,7 +92,7 @@ my $i = 0;
 #Iterates backwards through the array and check all combinations
 #Has added benefit of keeping only the largest 'i' by default
 #Only uses two loops because finding the difference will give the last number
-for ($l = @Arr; $l > 2; $l--)
+for ($l = @Arr; $l > @Arr / 2; $l--)
 {
     $k = $Arr[$l];
 
@@ -113,7 +102,7 @@ for ($l = @Arr; $l > 2; $l--)
         $i = $input - $k - $j;
 
         #Makes sure the 'i' is viable and less than both 'k' and 'j'
-        if (isPrime($i) && $i < @Arr[$x]) 
+        if (isPrime($i) && $i < $Arr[$x]) 
         {
             $newNorm = calcNorm($i, $j, $k);
             if ($norm == 0)
