@@ -6,8 +6,8 @@
 
 
 
-use warnings;
-use strict;
+#use warnings;
+#use strict;
 
 use Math::Complex;
 
@@ -16,28 +16,11 @@ use Math::Complex;
 #Requires input of ($)
 sub isPrime
 {
-	if ($_[0] == 1 || $_[0] == 3 || $_[0] == 5 || $_[0] == 7)
-	{
-		return 1;
-	}
-	elsif($_[0] % 3 == 0)
-	{
-		return 0;
-	}
-	elsif($_[0] % 5 == 0)
-	{
-		return 0;
-	}
-	elsif($_[0] % 7 == 0)
-	{
-		return 0;
-	} 
-
-	#Checks odd numbers above 7,
-	#If a numer's square is out of bounds, then that number will not be pared with
-	#a number greater than itself
+	#Checks odd numbers before the input
+	#If a numer's square is out of bounds, then that number (and the ones above it)
+	#will not divide that number
     my $l;
-	for($l = 11; $l * $l <= $_[0]; $l += 2)
+	for($l = 3; $l * $l <= $_[0]; $l += 2)
 	{
 		if($_[0] % $l == 0)
 		{
@@ -62,12 +45,12 @@ do
     $input = <>;
 } while ($input % 2 == 0);
 
-my @Arr = ();
-my $count = 0;
+my @Arr = (1,3,5,7);
+my $count = 4;
 my $p = 0;
 
 #Iterates only odd numbers to save run-time
-for ($p = 1; $p<= $input; $p += 2)
+for ($p = 11; $p<= $input; $p += 2)
 {
 	if (isPrime($p))
 	{
@@ -92,7 +75,8 @@ my $i = 0;
 #Iterates backwards through the array and check all combinations
 #Has added benefit of keeping only the largest 'i' by default
 #Only uses two loops because finding the difference will give the last number
-for ($l = @Arr; $l > @Arr / 2; $l--)
+#Stops before one third because at that point nothing can add up to the input
+for ($l = @Arr; $l > @Arr / 3; $l--)
 {
     $k = $Arr[$l];
 
