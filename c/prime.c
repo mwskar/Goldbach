@@ -1,9 +1,16 @@
 #include <stdio.h>
 
+void doStuff(void);
 int isPrime(int x);
 
 
 int main()
+{
+	doStuff();
+	return 0;
+}
+
+void doStuff (void)
 {
 	int input;
 
@@ -20,8 +27,6 @@ int main()
 		}
 
 	}
-
-	return 0;
 }
 
 
