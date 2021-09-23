@@ -1,0 +1,26 @@
+#!/usr/bin/python3
+
+def isPrime(input):
+	i = 3
+	while (i < input):
+		#print("input: ")
+		#print(input)
+		#print(" ")
+		#print(i)
+		#print("||")
+		if (input % i == 0):
+			return False
+		i = i + 2
+	return True
+
+def printNums(input):
+	i = 1
+	while(i < input):
+		if (isPrime(i)):
+			print(i)
+		i = i + 2	
+
+numstr = input("Enter an upper bound: " )
+num = int(numstr)
+
+printNums(num)
