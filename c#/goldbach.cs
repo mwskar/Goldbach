@@ -72,14 +72,7 @@ public class goldbach
                 {
                     newNorm = calcNorm(i,j,k);
 
-                    if (norm == 0)
-                    {
-                        norm = newNorm;
-                        goldList[0] = i;
-                        goldList[1] = j;
-                        goldList[2] = k;
-                    }
-                    else if(newNorm < norm)
+                    if (norm == 0 || newNorm < norm)
                     {
                         norm = newNorm;
                         goldList[0] = i;
