@@ -3,7 +3,6 @@
 
 void genPrimes(int userInput, int * list, int *arrSize);
 int isPrime(int x);
-int  * append(int * primeList, int arrSize, int newNum);
 void calcGoldbach(int list [], int arrSize, int userInput);
 double calcNorm(int i, int j, int k);
 
@@ -60,33 +59,6 @@ int isPrime(int number)
 		}
 	} 
 	return 1;	
-}
-
-int * append(int * primeList, int arrSize, int newNum)
-{
-    printf("Size : %d \n", arrSize);
-    int tempArr [arrSize + 2];
-    //printf("Last number is : %d\n", *(primeList+ 2));
-    for (int i = 0; i < arrSize; i++)
-    {
-        printf("transfering : %d \n", *(primeList + i));
-        tempArr[i] = *(primeList + i);
-    }
-
-    tempArr[arrSize - 1] = newNum;
-    printf("Last object in arr is now %d \n", tempArr[arrSize -1]);
-
-    primeList = NULL;
-    primeList = tempArr;
-
-
-    printf("Printing pointer\n");
-    for (int k = 0; k< arrSize; k++)
-            {
-                printf("%d \n", *(primeList + k));
-            }
-    
-    return primeList;
 }
 
 double calcNorm(int i, int j, int k)
