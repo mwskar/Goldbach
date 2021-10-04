@@ -22,7 +22,7 @@ int main()
         return 0;
     }
 
-    int list [(userInput / 3)];
+    int list [(userInput / 3) + 1];
 
 	genPrimes(userInput, list, &arrSize);
     calcGoldbach(list, arrSize, userInput);
