@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
-void genPrimes(int userInput, int * list, int *arrSize);
+int * genPrimes(int userInput, int *arrSize);
 int isPrime(int x);
 void calcGoldbach(int list [], int arrSize, int userInput);
 double calcNorm(int i, int j, int k);
@@ -9,7 +10,7 @@ double calcNorm(int i, int j, int k);
 int main()
 {
     int userInput;
-    
+    int *primeList;
     int arrSize = 0;
 
 
@@ -22,30 +23,44 @@ int main()
         return 0;
     }
 
-    int list [(userInput / 3) + 1];
+    
+    
 
-	genPrimes(userInput, list, &arrSize);
-    calcGoldbach(list, arrSize, userInput);
+	primeList = genPrimes(userInput, &arrSize);
+    calcGoldbach(primeList, arrSize, userInput);
 
 	return 0;
 }
 
-void genPrimes (int userInput, int * list, int *arrSize)
+int * genPrimes (int userInput, int *arrSize)
 {
     int holder;
-
+    int * tempArr;
+    int * primeList;
 	for (int i = 1; i < userInput; i = i + 2)
 	{
 		if (isPrime(i))
 		{
             holder = *arrSize;
-            //printf("Holder = %d\n", holder);
-			//printf("Adding : %d \n", i);
-            list[holder] = i;
-            //printf("List now has : %d\n", list[holder]);
+            tempArr = (int *)malloc((holder + 1) * sizeof(int));
+            
+            for (int counter = 0; counter < holder; counter++)
+            {
+                *(tempArr + counter) = *(primeList + counter);
+            }
+            
+            *(tempArr + holder) = i;
+
+            primeList = (int*)malloc( (holder + 1)* sizeof(int));
+            for (int counter = 0; counter < holder + 1; counter++)
+            {
+                *(primeList + counter) = *(tempArr + counter);
+            }
+
             *arrSize = holder + 1;
 		}
 	}
+    return primeList;
 }
 
 
@@ -63,11 +78,13 @@ int isPrime(int number)
 
 double calcNorm(int i, int j, int k)
 {
-    double x,y,z;
+    double x,y,z, s;
     x = (double) i;
     y = (double) j;
     z = (double) k;
-    return ((i * i)+(j * j)+(k * k));
+    s = (i * i)+(j * j)+(k * k);
+    return sqrt(s);
+    
 }
 
 void calcGoldbach(int list [], int arrSize, int userInput)
@@ -83,10 +100,10 @@ void calcGoldbach(int list [], int arrSize, int userInput)
     {
         k = list[k_pos];
         //printf("%d\n", k);
-        for (j_pos = k_pos -1; j_pos > 0; j_pos--)
+        for (j_pos = (k_pos -1); j_pos > 0; j_pos--)
         {
+            
             j = list[j_pos];
-
             i = userInput - k - j;
 
             if (i < j && isPrime(i))
@@ -95,6 +112,13 @@ void calcGoldbach(int list [], int arrSize, int userInput)
                 if (norm == 0.0 || newNorm < norm)
                 {
                     //printf("changing values");
+                    norm = newNorm;
+                    answer[0] = i;
+                    answer[1] = j;
+                    answer[2] = k;
+                }
+                else if(newNorm == newNorm && i > answer[0])
+                {
                     norm = newNorm;
                     answer[0] = i;
                     answer[1] = j;
