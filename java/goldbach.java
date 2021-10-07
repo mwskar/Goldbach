@@ -68,6 +68,9 @@ public class goldbach
         {  
             if (isPrime(check))
             {
+                //Moves values into a temp array, 
+                //moves back to a larger origional array
+                
                 tempArr = new int [primeArr.length + 1];
                 for (int i = 0; i < primeArr.length; i++)
                 {
