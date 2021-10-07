@@ -1,33 +1,33 @@
 # Goldbach project
 Complile and run instructions
 
-Python:
+Python: 
     chmod u+x goldbach
     goldabch
 
-GO:
+GO: 
     go run goldbach.go
     
-C
+C: 
     gcc -std=gnu99 -lm goldbach.c
     a.out
 
-C#
+C#: 
     mcs goldbach.cs
     mono goldbach.exe
 
-Java
+Java: 
     javac goldbach.java
     java goldbach
 
-Lisp:
+Lisp: 
     chmod u+x goldbach.lisp
     a.out
 
-Fortran:
+Fortran: 
     gfortran goldbach.f95
     a.out
 
-Perl:
+Perl: 
     chmod u+x goldbach.pl
     goldbach.pl
