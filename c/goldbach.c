@@ -120,10 +120,12 @@ int * calcGoldbach(int list [], int arrSize, int userInput)
     *(answer + 1) = 0;
     *(answer + 2) = 0;
 
-
+    //Iterate backward starting from the end of the list to the begining third
     for (k_pos = arrSize - 1; k_pos > arrSize / 3; k_pos--)
     {
         k = list[k_pos];
+
+        //Iterate backward from before k_pos to the second position
         for (j_pos = (k_pos -1); j_pos > 0; j_pos--)
         {
             
