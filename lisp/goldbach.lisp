@@ -1,6 +1,11 @@
 #!/usr/bin/sbcl --script
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;          Functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;Genterates all odd numebrs up to the user's input (evens will never be prime)
+;;The prime numbers are kept and returned
 (defun genPrimes (maxValue)
     (let (
         (primeList '())
@@ -18,6 +23,9 @@
     ); end let
 ); end func genPrimes
 
+
+;;Determines if a number is prime by checking possibile dividers
+;;It is assumed than an even number is not input
 (defun isPrime (num)
     (do
         ( (counter 3 (+ 2 counter)) );variables
@@ -28,6 +36,8 @@
     (return-from isPrime t)
 )
 
+;;Tests the Goldbach conjecture by iterating through possible prime combinations
+;;The answer vector will have the highest 'i' value associated with the lowest 'norm'
 (defun calcGoldbach (primeList userInput)
     (let (
         (norm 0)
@@ -41,20 +51,20 @@
         )
     
 
-        ;(print "Before loops")
+        ;Iterate backward starting from the end of the list to the begining third
         (loop for k_pos from 0 to (* 2 (/ len 3))
             do (setq k (nth k_pos revList))
-            ;(print "inside first loop")
+            
+            ;;Iterate backward from before k_pos to the second position
             (loop for j_pos from (+ k_pos 1) to (- len 2)
                 do
                 (setq j (nth j_pos revList))
                 (setq i (- userInput (+ k j)))
-                ;(print "inside second loop")
                 (setq newNorm (calcNorm i j k))
 
-                (format t "~d ~d ~d | ~F ~%" i j k newNorm)
 
-                (when (and (< i j) (isPrime i))
+                ;Updates norm and answer vector
+                (when (and (> i 0) (and (< i j) (isPrime i)))
                     (when (and (= norm newNorm) (> i (car answer)))
                                (setq norm newNorm)
                                (setq answer (list i j k))
@@ -74,10 +84,15 @@
 ) ;end fun calcGoldbach
 
 
+;Calculates the vector norm of three numbers (v = sqrt(i^2 + J^2 + k^2))
 (defun calcNorm (i j k)
     (return-from calcNorm (sqrt ( + (* i i) (+ (* j j) (* k k) ) ))  )
 )
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;           Main
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar userInput)
 (print "Please enter an odd number greater than 7: ")
@@ -85,16 +100,18 @@
 (setq userInput (read) )
 (terpri)
 
-(defvar primeList '())
-(defvar answer '())
+(when (and (> userInput 7) (/= (mod userInput 2) 0))
+    (defvar primeList '())
+    (defvar answer '())
 
 
+    (setq primeList (genPrimes userInput))
+    (setq answer (calcGoldbach primeList userInput))
 
 
-(setq primeList (genPrimes userInput))
-(setq answer (calcGoldbach primeList userInput))
+    (format t "~d : " userInput)
+    (print answer)
+    (terpri)
+)
 
 
-(print primeList)
-(print answer)
-(terpri)
