@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 import math
 
+
+######################################
+#             Functions
+######################################
+
+#Determines if a number is prime by checking possibile dividers
+#It is assumed than an even number is not input
 def isPrime(input):
 	i = 3
 	while (i * i <= input):
@@ -9,6 +16,9 @@ def isPrime(input):
 		i = i + 2
 	return True
 
+
+#Genterates all odd numebrs up to the user's input (evens will never be prime)
+#The prime numbers are kept and returned
 def getPrimes(input):
     primeList = []
     for counter in range (1,input, 2):
@@ -16,42 +26,58 @@ def getPrimes(input):
             primeList.append(counter)
     return primeList
 
+#Calculates the vector norm of three numbers (v = sqrt(i^2 + J^2 + k^2))
 def calcNorm(x,y,z):
     return math.sqrt((x**2)+(y**2)+(z**2))
 
+#Tests the Goldbach conjecture by iterating through possible prime combinations
+#The answer vector will have the highest 'i' value associated with the lowest 'norm'
 def goldbach(primeList, input):
     norm = 0.0
     newNorm = 0.0
     goldList = []
     length = len(primeList) - 1
 
+    #Iterate backward starting from the end of the list to the begining third
     for k_pos in range(length, int((length + 1 )/ 3), -1):
         k = primeList[k_pos]
+        
+        #Iterate backward from before k_pos to the second position
         for j_pos in range(k_pos-1, 0, -1):
             j = primeList[j_pos]
             i = input - k - j
+            
+            if (i < 1):
+                continue
+            
             if (isPrime(i) and i < j):
                 newNorm = calcNorm(i,j,k)
+                
+                #Updates norm and goldList vector
                 if (newNorm < norm or norm == 0.0):
+                    norm = newNorm
+                    goldList = [i,j,k]
+                elif (newNorm == norm and i > goldList[0]):
                     norm = newNorm
                     goldList = [i,j,k]
     
     return goldList
 
 
+############################################
+#          The actual program
+############################################
 
-#The actual program
 
-getInput = True
-
-while (getInput):
-    numstr = input("Enter an odd number greater than 7: " )
+numstr = input("Enter an odd number greater than 7: " )
+try:
     numInput = int(numstr)
-    if (numInput > 7 or numInput % 2 != 0):
-        getInput = False
+    if (numInput > 7 and numInput % 2 != 0):
+        primeList = getPrimes(numInput)
+        goldList = goldbach(primeList, numInput)
+        print (numInput, ":", goldList)
+    else:
+        print("A number was entered that is even or less than or equal to 7")
+except ValueError:
+    print ("An invalid value has been entered")
 
-primeList = getPrimes(numInput)
-
-goldList = goldbach(primeList, numInput)
-
-print (numInput, ":", goldList)
