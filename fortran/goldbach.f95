@@ -1,28 +1,57 @@
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!             The program
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 program goldbach
 
-call genPrimes
+integer:: userInput, errFlag = 0
+integer, dimension(:), allocatable :: primeList
+integer, dimension(3) :: answer
 
-end program goldbach
 
-subroutine genPrimes
-        integer :: current_number, userInput, arrLen, k_spot, j_spot, k, j ,i
-        real (kind = 8) :: norm, newNorm, clacNorm
-        integer, dimension (3) :: normArr
+userInput = 0
+print *, "Please enter an odd number greater than 7: "
+read*, userInput
+
+
+if (userInput > 7 .and. mod(userInput, 2) /= 0) then
+        call genPrimes(userInput, primeList)
+
+        call calcGoldbach(userInput, primeList, answer)
+
+        call printAnswer(userInput, answer)
+else 
+        print *, "A number was entered that is even or less than or equal to 7"
+end if
+
+
+
+contains
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                 Subroutines
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!!Genterates all odd numebrs up to the user's input (evens will never be prime)
+!!The prime numbers are kept and returned
+subroutine genPrimes(userInput, primeList)
+
+        integer :: current_number, arrLen
+        integer, intent (in) :: userInput
         integer, dimension (:), allocatable :: numArr, tempArr
         logical :: isPrime
-        character (len = 20) :: output, calcGoldbach
-
-
-        userInput = 0
-        do while (userInput < 8 .or. mod(userInput, 2) == 0)
-                print *, "Please enter an odd number greater than 7: "
-                read *, userInput
-        end do
+        integer, dimension(:), allocatable, intent (out) :: primeList
 
         current_number = 1
         allocate (numArr(0))
         do while (current_number < userInput)
                 if (isPrime(current_number)) then
+                        
+                        ! Moves values into a temp array, 
+                        !moves back to a larger origional array
+
                         arrLen = size(numArr) + 1
                         allocate (tempArr(arrLen))
                         tempArr(1:arrLen-1) = numArr
@@ -37,21 +66,55 @@ subroutine genPrimes
                 current_number = current_number + 2
         end do
 
+        allocate(primeList(arrLen))
+
+        primeList(1:) = numArr
+
+        deallocate (numArr)
+        
+end subroutine genPrimes
+
+
+!!Tests the Goldbach conjecture by iterating through possible prime combinations
+!!The answer vector will have the highest 'i' value associated with the lowest 'norm'
+subroutine calcGoldbach(userInput, primeList, answer)
+        integer, intent(in) :: userInput
+        integer, dimension (:), intent(in) :: primeList
+        integer, dimension (3), intent(out) :: answer
+
+        integer :: current_number, arrLen, k_spot, j_spot, k, j, i
+        real (kind = 8) :: norm, newNorm, clacNorm
+        integer, dimension (3) :: normArr
+        logical :: isPrime
 
         norm = 0.0D0
-        arrLen = size(numArr)
+        arrLen = size(primeList)
         k_spot = arrLen
+        
+        
+        !Iterate backward starting from the end of the list to the begining third
         do while (k_spot > (arrLen / 3))
-                k = numArr(k_spot)
+                k = primeList(k_spot)
 
                 j_spot = k_spot - 1
+
+                !Iterate backward from before k_pos to the second position
                 do while (j_spot > 0)
-                        j = numArr(j_spot)
+                        j = primeList(j_spot)
                         i = userInput - k - j
-                        !print *, i,j,k
-                        if (i > 0 .and. isPrime(i) .and. i < j) then
+
+                        if (i > 0 .and. i < j .and. isPrime(i)) then
                                 newNorm = clacNorm(i,j,k)
+
+                                !Updates norm and normArr vector
                                 if (newNorm < norm .or. norm == 0) then
+                                        !Holds onto the new data
+                                        
+                                        norm = newNorm
+                                        normArr(1) = i
+                                        normArr(2) = j
+                                        normArr(3) = k
+                                else if (newNorm == norm .and. i > normArr(1)) then
                                         norm = newNorm
                                         normArr(1) = i
                                         normArr(2) = j
@@ -63,12 +126,29 @@ subroutine genPrimes
                 k_spot = k_spot - 1
         end do
 
-        deallocate (numArr)
-        
-        print *, userInput, normArr(1), normArr(2), normArr(3)
-end subroutine genPrimes
+
+        answer(1:) = normArr
+
+end subroutine calcGoldbach 
 
 
+!!Prints out a formated answer vector
+subroutine printAnswer(userInput, answer)
+        integer, dimension(3), intent (in) :: answer
+        integer, intent (in) :: userInput
+        print *, userInput, ": ( ", answer(1), ",", answer(2), ",", answer(3), ")"
+end subroutine printAnswer
+
+
+end program goldbach
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                      Functions
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!!Determines if a number is prime by checking possibile dividers
+!!It is assumed than an even number is not input
 logical function isPrime(current_number)
         integer :: current_number, check_number
 
@@ -84,6 +164,7 @@ logical function isPrime(current_number)
         end do
 end function isPrime
 
+!!Calculates the vector norm of three numbers (v = sqrt(i^2 + J^2 + k^2))
 real (kind = 8) function clacNorm(i,j,k)
         integer :: i,j,k
         clacNorm = sqrt((real(i, kind = 8)**2) + (real(j, kind = 8)**2) &
